@@ -53,3 +53,11 @@
   padding: 10px;
   font-size: 20px;
 }
+
+.invalid {
+  border: 2px solid #ff0000;
+  background-color: rgb(250, 178, 178);
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 20px;
+}

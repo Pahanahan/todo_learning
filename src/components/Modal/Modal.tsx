@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 import Button from "../../UI/Button/Button";
 
@@ -10,6 +10,7 @@ interface ModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   resetWeekHandler: React.MouseEventHandler<HTMLButtonElement>;
+  saveToLocalStorageNewTask: (title: string) => void;
 }
 
 function Modal({
@@ -17,8 +18,19 @@ function Modal({
   showModal,
   setShowModal,
   resetWeekHandler,
+  saveToLocalStorageNewTask,
 }: ModalProps) {
+  const [taskState, setTaskState] = useState<string>("");
+  const [inputValid, setInputValid] = useState<boolean>(true);
   const overlayRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (showModal && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showModal, inputRef]);
+
   const closeModal = () => {
     setShowModal(false);
   };
@@ -29,6 +41,20 @@ function Modal({
     }
   };
 
+  const changeTaskState = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTaskState(value);
+    setInputValid(value.trim().length > 0);
+  };
+
+  const addNewTask = () => {
+    if (taskState.trim().length === 0) {
+      return;
+    }
+    saveToLocalStorageNewTask(taskState);
+    setTaskState("");
+  };
+
   const resetModal = (
     <Button onClick={resetWeekHandler} type="button">
       Start New Week
@@ -36,16 +62,19 @@ function Modal({
   );
 
   const addTaskModal = (
-    <form className={styles.modal__form}>
+    <div className={styles.modal__form}>
       <input
-        className={styles.modal__input}
+        onChange={changeTaskState}
+        value={taskState}
+        ref={inputRef}
+        className={inputValid ? `${styles.modal__input}` : `${styles.invalid}`}
         type="text"
         placeholder="Введите новое задание"
       />
-      <Button onClick={resetWeekHandler} type="button">
+      <Button onClick={addNewTask} type="button">
         Add New Task
       </Button>
-    </form>
+    </div>
   );
 
   return (

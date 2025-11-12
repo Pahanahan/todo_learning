@@ -3,11 +3,27 @@ import { useState } from "react";
 import Checkbox from "./components/Checkbox/Checkbox";
 import Button from "../../UI/Button/Button";
 import Modal from "../Modal/Modal";
-import { tasks } from "../../data/data";
+import { setLocalStorage } from "../../utils/setLocalStorage";
+import { getLocalStorage } from "../../utils/getLocalStorage";
+// import { tasks } from "../../data/data";
 
 import styles from "./Table.module.css";
 
+interface WeekDay {
+  name: string;
+  done: boolean;
+}
+
+interface Task {
+  title: string;
+  id: number;
+  weekDays: WeekDay[];
+}
+
 function Table() {
+  const tasksData = getLocalStorage("tasks");
+  const tasks: Task[] = tasksData ? JSON.parse(tasksData) : [];
+
   const [tasksState, setTasksState] = useState(tasks);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [action, setAction] = useState<string>("");
@@ -59,10 +75,52 @@ function Table() {
     setAction("reset");
   };
 
+  const deleteTask = (id: number) => {
+    setTasksState((prev) => {
+      const updatedTasks = prev.filter((task) => task.id !== id);
+      setLocalStorage("tasks", JSON.stringify(updatedTasks));
+
+      return updatedTasks;
+    });
+  };
+
+  const saveToLocalStorageNewTask = (title: string) => {
+    setTasksState((prev) => {
+      const newTask = {
+        id: Date.now(),
+        title: title,
+        weekDays: [
+          { name: "Пн", done: false },
+          { name: "Вт", done: false },
+          { name: "Ср", done: false },
+          { name: "Чт", done: false },
+          { name: "Пт", done: false },
+          { name: "Сб", done: false },
+          { name: "Вс", done: false },
+        ],
+      };
+
+      const updatedTasks = [...prev, newTask];
+      setLocalStorage("tasks", JSON.stringify(updatedTasks));
+
+      return updatedTasks;
+    });
+
+    setShowModal(false);
+  };
+
   const tasksMap = tasksState.map((task) => {
     return (
       <div key={task.id} className={styles.table__line}>
-        <div className={styles.table__title}>{task.title}</div>
+        <div className={styles.table__title}>
+          {task.title}
+          <button
+            onClick={() => deleteTask(task.id)}
+            className={styles.table__remove}
+          >
+            Delete
+          </button>
+        </div>
         <div className={styles.table__inputs}>
           {task.weekDays.map((week) => (
             <Checkbox
@@ -97,6 +155,7 @@ function Table() {
             setShowModal={setShowModal}
             resetWeekHandler={resetWeekHandler}
             action={action}
+            saveToLocalStorageNewTask={saveToLocalStorageNewTask}
           />
         </div>
       </div>
