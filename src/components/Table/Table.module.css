@@ -1,0 +1,33 @@
+.table__inner {
+  border: 2px solid #8b8b8b;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+}
+
+.table__weekdays {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.table__lines {
+  margin-bottom: 30px;
+}
+
+.table__line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table__inputs {
+  display: flex;
+  gap: 24.5px;
+}
+
+.table__btn {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}

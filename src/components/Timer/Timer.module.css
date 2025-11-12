@@ -1,0 +1,47 @@
+.timer__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  border: 2px solid #8b8b8b;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.timer__main,
+.timer__task {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  font-size: 30px;
+  font-weight: 300;
+  text-align: center;
+  padding: 20px;
+  border: 2px solid #8b8b8b;
+  border-radius: 25px;
+  box-shadow: 0px 0px 52px -10px #9747ff;
+}
+
+.timer__main-element,
+.timer__task-element {
+  display: flex;
+  justify-content: center;
+  min-width: 300px;
+  font-size: 40px;
+  font-weight: 400;
+}
+
+.timer__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.timer__btn {
+  color: #fff;
+  background-color: #1f1f1f;
+  padding: 10px;
+  font-size: 20px;
+  border: 2px solid #8b8b8b;
+  border-radius: 10px;
+}
