@@ -1,11 +1,9 @@
-import { useState } from "react";
-
-import Checkbox from "./components/Checkbox/Checkbox";
+import { memo, useState } from "react";
+import TaskRow from "./components/TaskRow/TaskRow";
 import Button from "../../UI/Button/Button";
 import Modal from "../Modal/Modal";
 import { setLocalStorage } from "../../utils/setLocalStorage";
 import { getLocalStorage } from "../../utils/getLocalStorage";
-// import { tasks } from "../../data/data";
 
 import styles from "./Table.module.css";
 
@@ -27,6 +25,7 @@ function Table() {
   const [tasksState, setTasksState] = useState(tasks);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [action, setAction] = useState<string>("");
+  const [deletedTaskId, setDeletedTaskId] = useState<number>(0);
 
   const weekDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
@@ -35,7 +34,7 @@ function Table() {
   });
 
   const onCheckedHandler = (id: number, weekDay: string) => {
-    const newTasksState = tasksState.slice().map((task) => {
+    const newTasksState = tasksState.map((task) => {
       if (task.id === id) {
         const newWeek = task.weekDays.map((week) => {
           if (week.name === weekDay) {
@@ -51,6 +50,7 @@ function Table() {
     });
 
     setTasksState(newTasksState);
+    setLocalStorage("tasks", JSON.stringify(newTasksState));
   };
 
   const resetWeekHandler = () => {
@@ -76,12 +76,19 @@ function Table() {
   };
 
   const deleteTask = (id: number) => {
+    setShowModal(true);
+    setAction("deleteTask");
+    setDeletedTaskId(id);
+  };
+
+  const updatedDeleteTasks = (id: number) => {
     setTasksState((prev) => {
       const updatedTasks = prev.filter((task) => task.id !== id);
       setLocalStorage("tasks", JSON.stringify(updatedTasks));
 
       return updatedTasks;
     });
+    setShowModal(false);
   };
 
   const saveToLocalStorageNewTask = (title: string) => {
@@ -111,26 +118,12 @@ function Table() {
 
   const tasksMap = tasksState.map((task) => {
     return (
-      <div key={task.id} className={styles.table__line}>
-        <div className={styles.table__title}>
-          {task.title}
-          <button
-            onClick={() => deleteTask(task.id)}
-            className={styles.table__remove}
-          >
-            Delete
-          </button>
-        </div>
-        <div className={styles.table__inputs}>
-          {task.weekDays.map((week) => (
-            <Checkbox
-              key={week.name}
-              onChecked={() => onCheckedHandler(task.id, week.name)}
-              checked={week.done}
-            />
-          ))}
-        </div>
-      </div>
+      <TaskRow
+        key={task.id}
+        task={task}
+        onChecked={onCheckedHandler}
+        onDelete={deleteTask}
+      ></TaskRow>
     );
   });
 
@@ -156,6 +149,8 @@ function Table() {
             resetWeekHandler={resetWeekHandler}
             action={action}
             saveToLocalStorageNewTask={saveToLocalStorageNewTask}
+            updatedDeleteTasks={updatedDeleteTasks}
+            deletedTaskId={deletedTaskId}
           />
         </div>
       </div>
@@ -163,4 +158,4 @@ function Table() {
   );
 }
 
-export default Table;
+export default memo(Table);

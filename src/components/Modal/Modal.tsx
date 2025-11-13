@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { memo, useRef, useState, useEffect } from "react";
 
 import Button from "../../UI/Button/Button";
 
@@ -10,6 +10,8 @@ interface ModalProps {
   showModal: boolean;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   resetWeekHandler: React.MouseEventHandler<HTMLButtonElement>;
+  updatedDeleteTasks: (id: number) => void;
+  deletedTaskId: number;
   saveToLocalStorageNewTask: (title: string) => void;
 }
 
@@ -18,6 +20,8 @@ function Modal({
   showModal,
   setShowModal,
   resetWeekHandler,
+  updatedDeleteTasks,
+  deletedTaskId,
   saveToLocalStorageNewTask,
 }: ModalProps) {
   const [taskState, setTaskState] = useState<string>("");
@@ -77,6 +81,12 @@ function Modal({
     </div>
   );
 
+  const deleteTaskModal = (
+    <Button onClick={() => updatedDeleteTasks(deletedTaskId)} type="button">
+      Delete Task
+    </Button>
+  );
+
   return (
     <div
       className={styles[`${showModal ? "modal" : "modal--hidden"}`]}
@@ -94,13 +104,16 @@ function Modal({
         <p className={styles.modal__message}>
           {action === "reset"
             ? "Are you sure Reset All Progress?"
-            : "Add New Task"}
+            : action === "addTask"
+            ? "Add New Task"
+            : "Are your sure to Delete this Task?"}
         </p>
         {action === "reset" && resetModal}
         {action === "addTask" && addTaskModal}
+        {action === "deleteTask" && deleteTaskModal}
       </div>
     </div>
   );
 }
 
-export default Modal;
+export default memo(Modal);

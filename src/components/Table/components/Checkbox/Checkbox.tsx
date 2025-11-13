@@ -1,11 +1,8 @@
-import type React from "react";
-import { memo } from "react";
-
 import styles from "./Checkbox.module.css";
 
 interface CheckboxProps {
   checked: boolean;
-  onChecked: React.ChangeEventHandler<HTMLInputElement>;
+  onChecked: () => void;
 }
 
 function Checkbox({ checked, onChecked }: CheckboxProps) {
@@ -18,4 +15,4 @@ function Checkbox({ checked, onChecked }: CheckboxProps) {
   );
 }
 
-export default memo(Checkbox);
+export default Checkbox;

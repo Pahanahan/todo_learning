@@ -16,31 +16,6 @@
   margin-bottom: 30px;
 }
 
-.table__line {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #fff;
-  margin-bottom: 10px;
-}
-
-.table__title {
-  margin-bottom: 5px;
-}
-
-.table__remove {
-  font-size: 14px;
-  margin-left: 20px;
-  color: red;
-  background: transparent;
-  border: 1px solid red;
-  border-radius: 4px;
-}
-
-.table__inputs {
-  display: flex;
-  gap: 24.5px;
-}
-
 .table__btn {
   display: flex;
   justify-content: center;
